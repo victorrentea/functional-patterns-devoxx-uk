@@ -22,7 +22,6 @@ import lombok.Data;
 
 
 
-
 //VVVVVVVVV ==== supporting (dummy) code ==== VVVVVVVVV
 @Data
 class Order {
@@ -39,9 +38,6 @@ class OrderLine {
 
 @Data
 class Product {
-	public boolean isNotDeleted() {
-		return !deleted;
-	}
 	private Long id;
 	private boolean deleted;
 }
