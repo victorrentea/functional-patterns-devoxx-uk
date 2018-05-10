@@ -11,19 +11,6 @@ import lombok.Data;
 // get the list of users to UI
 
 
-class UserFacade {
-	
-	private UserRepo userRepo;
-	
-	public List<UserDto> getAllUsers() {
-		return userRepo.findAll().stream()
-				.map(UserDto::new)
-				.collect(toList());
-	}
-
-}
-
-
 
 
 
@@ -46,11 +33,6 @@ class User {
 
 @Data
 class UserDto {
-	public UserDto(User user) {
-		this.setUsername(user.getUsername());
-		this.setFullName(user.getFirstName() + " " + user.getLastName().toUpperCase());
-		this.setActive(user.getDeactivationDate() == null);
-	}
 	private String fullName;
 	private String username;
 	private boolean active;
