@@ -1,14 +1,25 @@
 package victor.clean.lambdas;
 
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.function.BiFunction;
 
 import victor.clean.lambdas.Movie.Type;
 
 class Movie {
 	// @Inject
 	enum Type {
-		REGULAR , NEW_RELEASE , CHILDREN 
+		REGULAR(PriceService::computeRegularPrice), 
+		NEW_RELEASE(PriceService::computeNewReleasePrice) , 
+		CHILDREN(PriceService::computeChildrenPrice) ;
+		public final BiFunction<PriceService, Integer, Integer> priceAlgo;
+
+		private Type(BiFunction<PriceService, Integer, Integer> priceAlgo) {
+			this.priceAlgo = priceAlgo;
+		}
+		
 	}
 	
 	private final Type type;
@@ -24,7 +35,9 @@ interface NewReleasePriceRepo {
 	double getFactor(); // will return that silly 2
 }
 
+//@Component
 class PriceService {
+	//@Autowired / @Inject
 	private final NewReleasePriceRepo repo;
 	
 	public PriceService(NewReleasePriceRepo repo) {
@@ -40,12 +53,7 @@ class PriceService {
 		return 5;
 	}
 	public int computePrice(Movie.Type type, int days) {
-		switch (type) {
-		case REGULAR: return computeRegularPrice(days);
-		case NEW_RELEASE: return computeNewReleasePrice(days);
-		case CHILDREN: return computeChildrenPrice(days);
-		default: throw new IllegalArgumentException();
-		}
+		return type.priceAlgo.apply(this, days);
 	}
 }
 
