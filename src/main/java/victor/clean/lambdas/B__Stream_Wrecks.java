@@ -24,6 +24,12 @@ import lombok.Data;
 
 //VVVVVVVVV ==== supporting (dummy) code ==== VVVVVVVVV
 @Data
+class Product {
+	private Long id;
+	private boolean deleted;
+}
+
+@Data
 class Order {
 	private Long id;
 	private List<OrderLine> orderLines;
@@ -34,12 +40,6 @@ class Order {
 class OrderLine {
 	private Product product;
 	private int itemCount;
-}
-
-@Data
-class Product {
-	private Long id;
-	private boolean deleted;
 }
 
 interface ProductRepo {
