@@ -3,8 +3,8 @@ package victor.clean.lambdas;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import lombok.Data;
 
@@ -13,11 +13,24 @@ import lombok.Data;
 class UserFacade {
 	
 	private UserRepo userRepo;
+	//@Autowired
+	private UserMapper mapper;
 	
 	public List<UserDto> getAllUsers() {
-		return userRepo.findAll().stream().map(UserDto::new).collect(toList());
+		return userRepo.findAll().stream().map(mapper::convertUser).collect(toList());
 	}
 
+
+}
+
+class UserMapper {
+	public UserDto convertUser(User user) {
+		UserDto dto = new UserDto();
+		dto.setUsername(user.getUsername());
+		dto.setFullName(user.getFirstName() + " " + user.getLastName().toUpperCase());
+		dto.setActive(user.getDeactivationDate() == null);
+		return dto;
+	}
 }
 
 
@@ -47,10 +60,4 @@ class UserDto {
 	private String fullName;
 	private String username;
 	private boolean active;
-
-	public UserDto(User user) {
-		setUsername(user.getUsername());
-		setFullName(user.getFirstName() + " " + user.getLastName().toUpperCase());
-		setActive(user.getDeactivationDate() == null);
-	}
 }
